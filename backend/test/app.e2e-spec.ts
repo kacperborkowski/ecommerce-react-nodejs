@@ -4,7 +4,7 @@ import request from 'supertest';
 import { App } from 'supertest/types.js';
 import { AppModule } from './../src/app.module.js';
 
-describe('AppController (e2e)', () => {
+describe('Products API (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
@@ -13,14 +13,21 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.setGlobalPrefix('api');
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('GET /api/products returns the product list', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/products')
+      .expect(200);
+
+    expect(response.body).toHaveLength(20);
+    expect(response.body[0]).toMatchObject({
+      id: '1',
+      slug: 'voltix-nova-12',
+      price: 249900,
+    });
   });
 
   afterEach(async () => {
