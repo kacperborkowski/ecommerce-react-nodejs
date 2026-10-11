@@ -1,3 +1,13 @@
+:root {
+  --color-text: #1f1d24;
+  --color-text-muted: #6b6375;
+  --color-bg: #fff;
+  --color-bg-muted: #f4f3f6;
+  --color-border: #e2e0e6;
+  --color-accent: #6d28d9;
+  --color-accent-hover: #5b21b6;
+}
+
 *,
 *::before,
 *::after {
@@ -7,4 +17,12 @@
 body {
   margin: 0;
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
 }

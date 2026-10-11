@@ -1,5 +1,7 @@
+import { Header } from '@/modules/layout'
+
 function App() {
-  return <h1>Shop</h1>
+  return <Header />
 }
 
 export default App
