@@ -1,0 +1,65 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.control {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-bg);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.control:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.track {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  padding: 0 0 8px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.item {
+  flex: 0 0 calc((100% - 4 * 16px) / 5);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 900px) {
+  .item {
+    flex-basis: calc((100% - 2 * 16px) / 3);
+  }
+}
+
+@media (max-width: 600px) {
+  .item {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+}

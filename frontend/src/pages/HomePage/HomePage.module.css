@@ -1,0 +1,22 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+.hero {
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ede9fe, #f4f3f6);
+}
+
+.heroLogo {
+  font-size: clamp(48px, 10vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+}
