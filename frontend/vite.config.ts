@@ -10,4 +10,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    // Forward /api requests to the NestJS backend during development
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
+  },
 })
