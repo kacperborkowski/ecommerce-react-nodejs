@@ -8,19 +8,19 @@ export function HomePage() {
 
   return (
     <div className={`container ${styles.page}`}>
-      <section className={styles.hero} aria-label="Logo sklepu">
+      <section className={styles.hero} aria-label="Shop logo">
         <span className={styles.heroLogo}>Shop</span>
       </section>
 
-      {isPending && <p className={styles.status}>Ładowanie produktów…</p>}
+      {isPending && <p className={styles.status}>Loading products…</p>}
       {isError && (
         <p className={styles.status} role="alert">
-          Nie udało się pobrać produktów. Spróbuj ponownie później.
+          Could not load products. Please try again later.
         </p>
       )}
       {products && (
         <ProductCarousel
-          title="Polecane produkty"
+          title="Featured products"
           products={products.slice(0, FEATURED_PRODUCTS_COUNT)}
         />
       )}

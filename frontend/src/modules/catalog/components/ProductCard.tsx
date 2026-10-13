@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <article className={styles.card}>
       <div className={styles.image}>
         <span className={styles.imagePlaceholder} aria-hidden="true">
-          Zdjęcie
+          Image
         </span>
       </div>
       <p className={styles.brand}>{product.brand}</p>

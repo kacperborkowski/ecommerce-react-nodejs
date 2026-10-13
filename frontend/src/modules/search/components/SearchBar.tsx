@@ -29,13 +29,13 @@ export function SearchBar() {
         className={styles.input}
         type="search"
         name="q"
-        placeholder="Czego szukasz?"
-        aria-label="Szukaj produktów"
+        placeholder="What are you looking for?"
+        aria-label="Search products"
         defaultValue={currentQuery}
         maxLength={100}
       />
       <button className={styles.button} type="submit">
-        Szukaj
+        Search
       </button>
     </form>
   )

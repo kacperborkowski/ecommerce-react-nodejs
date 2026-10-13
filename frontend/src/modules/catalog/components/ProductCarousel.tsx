@@ -27,7 +27,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
           <button
             type="button"
             className={styles.control}
-            aria-label="Poprzednie produkty"
+            aria-label="Previous products"
             onClick={() => scroll('prev')}
           >
             ‹
@@ -35,7 +35,7 @@ export function ProductCarousel({ title, products }: ProductCarouselProps) {
           <button
             type="button"
             className={styles.control}
-            aria-label="Następne produkty"
+            aria-label="Next products"
             onClick={() => scroll('next')}
           >
             ›

@@ -3,8 +3,6 @@ import { ProductGrid, useProducts } from '@/modules/catalog'
 import { pluralize } from '@/shared/lib/pluralize'
 import styles from './SearchPage.module.css'
 
-const PRODUCT_FORMS = { one: 'produkt', few: 'produkty', many: 'produktów' }
-
 export function SearchPage() {
   const [searchParams] = useSearchParams()
   const query = searchParams.get('q')?.trim() ?? ''
@@ -14,23 +12,22 @@ export function SearchPage() {
     <div className={`container ${styles.page}`}>
       <header className={styles.header}>
         <h1 className={styles.title}>
-          {query ? `Wyniki wyszukiwania: „${query}”` : 'Wszystkie produkty'}
+          {query ? `Search results for “${query}”` : 'All products'}
         </h1>
         {products && (
-          <p className={styles.count}>{pluralize(products.length, PRODUCT_FORMS)}</p>
+          <p className={styles.count}>{pluralize(products.length, 'product', 'products')}</p>
         )}
       </header>
 
-      {isPending && <p className={styles.status}>Wyszukiwanie…</p>}
+      {isPending && <p className={styles.status}>Searching…</p>}
       {isError && (
         <p className={styles.status} role="alert">
-          Nie udało się pobrać wyników. Spróbuj ponownie później.
+          Could not load search results. Please try again later.
         </p>
       )}
       {products?.length === 0 && (
         <p className={styles.status}>
-          Nie znaleźliśmy produktów pasujących do „{query}”. Sprawdź pisownię lub wpisz
-          inną frazę.
+          No products found for “{query}”. Check the spelling or try a different phrase.
         </p>
       )}
       {products && products.length > 0 && <ProductGrid products={products} />}
