@@ -49,7 +49,7 @@ describe('ProductsService', () => {
     });
 
     it('returns an empty list when nothing matches', () => {
-      expect(names('lodówka')).toEqual([]);
+      expect(names('fridge')).toEqual([]);
     });
   });
 });

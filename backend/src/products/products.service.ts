@@ -14,12 +14,12 @@ export class ProductsService {
 
     // Every word has to appear in the name, so "nova pro" matches "Voltix Nova 12 Pro"
     return PRODUCTS.filter((product) => {
-      const name = product.name.toLocaleLowerCase('pl');
+      const name = product.name.toLowerCase();
       return words.every((word) => name.includes(word));
     });
   }
 
   private toSearchWords(query = ''): string[] {
-    return query.trim().toLocaleLowerCase('pl').split(/\s+/).filter(Boolean);
+    return query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   }
 }
