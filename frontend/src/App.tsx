@@ -1,15 +1,8 @@
-import { Header } from '@/modules/layout'
-import { HomePage } from '@/pages/HomePage'
+import { RouterProvider } from 'react-router/dom'
+import { router } from '@/app/router'
 
 function App() {
-  return (
-    <>
-      <Header />
-      <main>
-        <HomePage />
-      </main>
-    </>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App
