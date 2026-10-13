@@ -11,3 +11,8 @@ export type Product = {
   price: number
   stock: number
 }
+
+// Query string params accepted by GET /api/products
+export type ProductsQuery = {
+  q?: string
+}
