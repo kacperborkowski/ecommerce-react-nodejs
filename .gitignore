@@ -1,3 +1,6 @@
 .claude/
 .idea/
 .DS_Store
+
+# Local environment variables with secrets
+.env
