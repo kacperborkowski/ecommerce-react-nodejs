@@ -10,6 +10,7 @@ coverage
 # environment variables
 .env
 .env.*
+!.env.example
 
 # logs
 *.log
