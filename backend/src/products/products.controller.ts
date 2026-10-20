@@ -9,7 +9,7 @@ export class ProductsController {
 
   // GET /api/products?q=nova
   @Get()
-  findAll(@Query() query: SearchProductsDto): Product[] {
+  findAll(@Query() query: SearchProductsDto): Promise<Product[]> {
     return this.productsService.findAll(query);
   }
 }

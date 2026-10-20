@@ -2,7 +2,7 @@ export type ProductCategory =
   'smartphones' | 'laptops' | 'headphones' | 'smartwatches';
 
 export interface Product {
-  id: string;
+  id: number;
   slug: string;
   name: string;
   brand: string;
