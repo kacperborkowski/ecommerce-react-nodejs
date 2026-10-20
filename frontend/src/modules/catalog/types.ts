@@ -2,7 +2,7 @@ export type ProductCategory = 'smartphones' | 'laptops' | 'headphones' | 'smartw
 
 // Mirrors the Product returned by the backend (GET /api/products)
 export type Product = {
-  id: string
+  id: number
   slug: string
   name: string
   brand: string
