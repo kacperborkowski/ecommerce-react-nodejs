@@ -33,6 +33,13 @@ describe('Products API (e2e)', () => {
     return (response.body as { name: string }[]).map((product) => product.name);
   };
 
+  it('GET /api/health reports that the app is up', async () => {
+    await request(app.getHttpServer())
+      .get('/api/health')
+      .expect(200)
+      .expect({ status: 'ok' });
+  });
+
   it('GET /api/products returns the product list', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/products')
