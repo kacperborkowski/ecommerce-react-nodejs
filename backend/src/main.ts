@@ -6,11 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   setupApp(app);
 
-  // Cloud Run stops containers with SIGTERM. Shutdown hooks let Nest call
-  // onModuleDestroy (e.g. close database connections) before the process exits.
+  // On Ctrl+C or a restart in watch mode, let Nest call onModuleDestroy
+  // (e.g. close database connections) before the process exits.
   app.enableShutdownHooks();
 
-  // Cloud Run sets PORT. 0.0.0.0 accepts connections from outside the container.
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();
