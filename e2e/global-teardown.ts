@@ -14,12 +14,20 @@ export default async function globalTeardown() {
 
   try {
     await client.query('BEGIN')
+    // First add up the pieces per product. UPDATE ... FROM changes each
+    // product row only once, so with several orders of the same product
+    // joining order_items directly would give back only one of them.
     await client.query(
       `UPDATE products p
-       SET stock = p.stock + oi.quantity
-       FROM order_items oi
-       JOIN orders o ON o.id = oi.order_id
-       WHERE o.email = $1 AND oi.product_id = p.id`,
+       SET stock = p.stock + ordered.quantity
+       FROM (
+         SELECT oi.product_id, sum(oi.quantity)::int AS quantity
+         FROM order_items oi
+         JOIN orders o ON o.id = oi.order_id
+         WHERE o.email = $1
+         GROUP BY oi.product_id
+       ) AS ordered
+       WHERE ordered.product_id = p.id`,
       [TEST_EMAIL],
     )
     await client.query('DELETE FROM orders WHERE email = $1', [TEST_EMAIL])
