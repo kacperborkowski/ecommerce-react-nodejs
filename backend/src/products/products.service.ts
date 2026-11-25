@@ -10,8 +10,9 @@ import {
 
 // Columns returned to the API. Shared by all queries, so every endpoint
 // returns products in the same shape.
+// image_url AS "imageUrl": the column is snake_case in SQL, the API uses camelCase
 const PRODUCT_COLUMNS =
-  'id, slug, name, brand, category, description, price, stock';
+  'id, slug, name, brand, category, description, price, stock, image_url AS "imageUrl"';
 
 // The filtering part of the query string as a plain object type (the DTO is a
 // class used for validation). Plain objects are safe to copy with { ...filters }.

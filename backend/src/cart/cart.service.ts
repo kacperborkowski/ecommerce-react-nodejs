@@ -24,8 +24,8 @@ export class CartService {
 
     // JOIN takes the current name and price from products for every item
     const rows = await this.db.query<CartItemRow>(
-      `SELECT p.id AS "productId", p.slug, p.name, p.brand, p.price, p.stock,
-              ci.quantity
+      `SELECT p.id AS "productId", p.slug, p.name, p.brand,
+              p.image_url AS "imageUrl", p.price, p.stock, ci.quantity
        FROM cart_items ci
        JOIN products p ON p.id = ci.product_id
        WHERE ci.cart_id = $1

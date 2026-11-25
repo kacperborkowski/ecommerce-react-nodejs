@@ -3,6 +3,7 @@ export interface CartItem {
   slug: string;
   name: string;
   brand: string;
+  imageUrl: string | null;
   // Current product price in grosze
   price: number;
   // How many are available, so the frontend can limit the quantity input

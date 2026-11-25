@@ -263,6 +263,36 @@ describe('Products API (e2e)', () => {
     });
   });
 
+  describe('product images', () => {
+    it('returns the image address with products', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/products/voltix-nova-12')
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        imageUrl: '/images/products/voltix-nova-12.svg',
+      });
+    });
+
+    it('serves the image file', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/images/products/voltix-nova-12.svg')
+        .expect(200);
+
+      expect(response.headers['content-type']).toContain('image/svg+xml');
+      expect(response.headers['cache-control']).toContain('max-age=86400');
+    });
+
+    it('returns 404 for missing files and paths outside the images folder', async () => {
+      await request(app.getHttpServer())
+        .get('/images/products/missing.svg')
+        .expect(404);
+      await request(app.getHttpServer())
+        .get('/images/..%2F..%2F.env')
+        .expect(404);
+    });
+  });
+
   describe('GET /api/products/:slug', () => {
     it('returns a single product', async () => {
       const response = await request(app.getHttpServer())

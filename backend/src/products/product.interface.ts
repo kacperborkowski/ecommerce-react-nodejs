@@ -23,6 +23,8 @@ export interface Product {
   // Price in grosze (1 PLN = 100 grosze) to avoid floating point rounding errors
   price: number;
   stock: number;
+  // e.g. /images/products/voltix-nova-12.svg, or null when there's no image
+  imageUrl: string | null;
 }
 
 // One option in the filters panel, e.g. { value: 'Voltix', count: 6 }
