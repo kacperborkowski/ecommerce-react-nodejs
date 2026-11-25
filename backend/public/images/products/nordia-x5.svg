@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="1" stop-color="#ccfbf1"/>
+  </radialGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset="1" stop-color="#134e4a"/>
+  </linearGradient>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0d9488"/>
+    <stop offset="1" stop-color="#134e4a"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3f4f6"/>
+    <stop offset="1" stop-color="#9ca3af"/>
+  </linearGradient>
+  <linearGradient id="rgb" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ef4444"/>
+    <stop offset="0.33" stop-color="#eab308"/>
+    <stop offset="0.66" stop-color="#22c55e"/>
+    <stop offset="1" stop-color="#3b82f6"/>
+  </linearGradient>
+</defs>
+<rect width="600" height="600" fill="url(#bg)"/>
+<ellipse cx="300" cy="500" rx="180" ry="18" fill="#000" opacity="0.10"/><g>
+  <rect x="140" y="120" width="175" height="330" rx="32" fill="url(#body)"/>
+  <rect x="160" y="138" width="62" height="64" rx="20" fill="#000" opacity="0.18"/>
+  <circle cx="190" cy="168" r="13" fill="#111827" stroke="#4b5563" stroke-width="4"/>
+  <text x="227" y="410" text-anchor="middle" font-family="Arial, sans-serif"
+        font-size="16" font-weight="700" letter-spacing="3" fill="#fff" opacity="0.7">NORDIA</text>
+</g><g>
+  <rect x="275" y="150" width="185" height="330" rx="32" fill="#111827"/>
+  <rect x="284" y="159" width="167" height="312" rx="24" fill="url(#screen)"/>
+  <rect x="347" y="168" width="41" height="12" rx="6" fill="#111827"/>
+  <text x="367.5" y="227.64" text-anchor="middle" font-family="Arial, sans-serif" font-size="33" font-weight="700" fill="#fff" opacity="0.95">12:30</text>
+<rect x="296.0" y="290.0" width="65.5" height="65.5" rx="12" fill="#fff" opacity="0.22"/>
+<rect x="373.5" y="290.0" width="65.5" height="65.5" rx="12" fill="#fff" opacity="0.22"/>
+<rect x="296.0" y="367.5" width="65.5" height="65.5" rx="12" fill="#fff" opacity="0.22"/>
+<rect x="373.5" y="367.5" width="65.5" height="65.5" rx="12" fill="#fff" opacity="0.22"/>
+</g>
+</svg>

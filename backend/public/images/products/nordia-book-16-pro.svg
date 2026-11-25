@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="1" stop-color="#ccfbf1"/>
+  </radialGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset="1" stop-color="#134e4a"/>
+  </linearGradient>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0d9488"/>
+    <stop offset="1" stop-color="#134e4a"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3f4f6"/>
+    <stop offset="1" stop-color="#9ca3af"/>
+  </linearGradient>
+  <linearGradient id="rgb" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ef4444"/>
+    <stop offset="0.33" stop-color="#eab308"/>
+    <stop offset="0.66" stop-color="#22c55e"/>
+    <stop offset="1" stop-color="#3b82f6"/>
+  </linearGradient>
+</defs>
+<rect width="600" height="600" fill="url(#bg)"/>
+<ellipse cx="300" cy="392.0" rx="204.0" ry="18" fill="#000" opacity="0.10"/><rect x="131.99999999999997" y="105.99999999999997" width="336.00000000000006" height="224.00000000000003" rx="14" fill="#111827"/>
+  <rect x="141.99999999999997" y="115.99999999999997" width="316.00000000000006" height="202.00000000000003" rx="6" fill="url(#screen)"/>
+  <rect x="161.99999999999997" y="139.99999999999997" width="134.40000000000003" height="14" rx="7" fill="#fff" opacity="0.5"/>
+  <rect x="161.99999999999997" y="165.99999999999997" width="184.80000000000004" height="10" rx="5" fill="#fff" opacity="0.3"/>
+  <rect x="161.99999999999997" y="185.99999999999997" width="161.28000000000003" height="10" rx="5" fill="#fff" opacity="0.3"/>
+  <rect x="161.99999999999997" y="260.0" width="85.3" height="36" rx="8" fill="#fff" opacity="0.2"/>
+  <rect x="257.3" y="260.0" width="85.3" height="36" rx="8" fill="#fff" opacity="0.2"/>
+  <rect x="352.7" y="260.0" width="85.3" height="36" rx="8" fill="#fff" opacity="0.2"/><path d="M123.99999999999997 330.0 L476.0 330.0 L504.0 352.0 Q504.0 360.0 494.0 360.0
+        L105.99999999999997 360.0 Q95.99999999999997 360.0 95.99999999999997 352.0 Z" fill="#134e4a"/>
+  <rect x="266" y="330.0" width="68" height="6" rx="3" fill="#000" opacity="0.25"/>
+</svg>

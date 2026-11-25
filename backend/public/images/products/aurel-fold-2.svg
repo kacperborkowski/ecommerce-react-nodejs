@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="42%" r="70%">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="1" stop-color="#fef3c7"/>
+  </radialGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#fde047"/>
+    <stop offset="1" stop-color="#3f3f46"/>
+  </linearGradient>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#ca8a04"/>
+    <stop offset="1" stop-color="#3f3f46"/>
+  </linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3f4f6"/>
+    <stop offset="1" stop-color="#9ca3af"/>
+  </linearGradient>
+  <linearGradient id="rgb" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ef4444"/>
+    <stop offset="0.33" stop-color="#eab308"/>
+    <stop offset="0.66" stop-color="#22c55e"/>
+    <stop offset="1" stop-color="#3b82f6"/>
+  </linearGradient>
+</defs>
+<rect width="600" height="600" fill="url(#bg)"/>
+<ellipse cx="300" cy="470" rx="210" ry="18" fill="#000" opacity="0.10"/><g>
+  <rect x="110" y="150" width="380" height="290" rx="26" fill="#111827"/>
+  <rect x="122" y="162" width="356" height="266" rx="18" fill="url(#screen)"/>
+  <line x1="300" y1="162" x2="300" y2="428" stroke="#000" stroke-width="3" opacity="0.25"/>
+  <text x="211" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="40"
+        font-weight="700" fill="#fff">12:30</text>
+  <rect x="140" y="270" width="140" height="62" rx="12" fill="#fff" opacity="0.22"/>
+  <rect x="140" y="344" width="140" height="62" rx="12" fill="#fff" opacity="0.22"/>
+  <rect x="320" y="185" width="140" height="221" rx="12" fill="#fff" opacity="0.16"/>
+  <circle cx="460" cy="180" r="6" fill="#111827"/>
+</g>
+</svg>
