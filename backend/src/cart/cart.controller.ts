@@ -10,25 +10,12 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import type { CookieOptions, Request, Response } from 'express';
+import type { Request, Response } from 'express';
+import { readCartId, setCartCookie } from './cart-cookie.js';
 import { Cart } from './cart.interface.js';
 import { CartService } from './cart.service.js';
 import { AddCartItemDto } from './dto/add-cart-item.dto.js';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto.js';
-
-const CART_COOKIE = 'cartId';
-
-const CART_COOKIE_OPTIONS: CookieOptions = {
-  // JavaScript in the browser can't read the cookie, so a malicious script
-  // can't steal the cart id. The browser still sends it with every request.
-  httpOnly: true,
-  // Not sent with requests started by other websites
-  sameSite: 'lax',
-  // Over HTTPS only, outside local development
-  secure: process.env.NODE_ENV === 'production',
-  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days, in milliseconds
-  path: '/',
-};
 
 @Controller('cart')
 export class CartController {
@@ -37,7 +24,7 @@ export class CartController {
   // GET /api/cart
   @Get()
   getCart(@Req() req: Request): Promise<Cart> {
-    return this.cartService.getCart(this.readCartId(req));
+    return this.cartService.getCart(readCartId(req));
   }
 
   // POST /api/cart/items  { "productId": 3, "quantity": 1 }
@@ -49,13 +36,12 @@ export class CartController {
     @Body() body: AddCartItemDto,
   ): Promise<Cart> {
     const { cartId, cart } = await this.cartService.addItem(
-      this.readCartId(req),
+      readCartId(req),
       body.productId,
       body.quantity,
     );
 
-    // Set (or refresh) the cookie, so the browser remembers this cart
-    res.cookie(CART_COOKIE, cartId, CART_COOKIE_OPTIONS);
+    setCartCookie(res, cartId);
     return cart;
   }
 
@@ -68,7 +54,7 @@ export class CartController {
     @Body() body: UpdateCartItemDto,
   ): Promise<Cart> {
     return this.cartService.updateItem(
-      this.readCartId(req),
+      readCartId(req),
       productId,
       body.quantity,
     );
@@ -80,11 +66,6 @@ export class CartController {
     @Req() req: Request,
     @Param('productId', ParseIntPipe) productId: number,
   ): Promise<Cart> {
-    return this.cartService.removeItem(this.readCartId(req), productId);
-  }
-
-  private readCartId(req: Request): string | undefined {
-    const value: unknown = req.cookies?.[CART_COOKIE];
-    return typeof value === 'string' ? value : undefined;
+    return this.cartService.removeItem(readCartId(req), productId);
   }
 }

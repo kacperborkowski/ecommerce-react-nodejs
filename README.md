@@ -148,6 +148,28 @@ The guest cart is identified by an `httpOnly` cookie `cartId` (a random UUID), s
 
 Quantities are limited to the product stock (and 99); going over returns `409`. A product that is not in the cart returns `404`.
 
+### Checkout and orders
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/checkout/options` | delivery methods with prices and payment methods |
+| `POST /api/orders` | turns the cart into an order (see below) |
+| `GET /api/orders/:id` | an order, for the confirmation page; the id is a random UUID |
+
+`POST /api/orders` body:
+
+```json
+{
+  "idempotencyKey": "7f0c2c1e-3b9a-4d55-9c8e-2f1a6b0d4e11",
+  "customer": { "email": "jan@example.com", "firstName": "Jan", "lastName": "Kowalski", "phone": "+48 600 100 200" },
+  "address": { "street": "Prosta 1", "postalCode": "00-950", "city": "Warszawa" },
+  "deliveryMethod": "courier",
+  "paymentMethod": "blik"
+}
+```
+
+Placing an order runs in one database transaction: it locks the products, checks the stock, saves the order with the current prices, takes the pieces out of stock and deletes the cart. If anything fails, nothing is saved. Sending the same `idempotencyKey` again returns the existing order (`200`) instead of creating a second one. Payment is not processed: the order is saved with the chosen method and status `placed`.
+
 ## Project structure
 
 ```
