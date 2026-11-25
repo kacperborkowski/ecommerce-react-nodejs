@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DatabaseService } from '../database/database.service.js';
 import { ProductsService } from './products.service.js';
@@ -64,5 +65,22 @@ describe('ProductsService', () => {
     await service.findAll({ q: '100%_off' });
 
     expect(lastCall().params).toEqual(['%100\\%\\_off%']);
+  });
+
+  describe('findBySlug', () => {
+    it('looks the product up by slug passed as a parameter', async () => {
+      const product = { id: 1, slug: 'voltix-nova-12' };
+      query.mockResolvedValue([product]);
+
+      await expect(service.findBySlug('voltix-nova-12')).resolves.toBe(product);
+      expect(lastCall().sql).toContain('WHERE slug = $1');
+      expect(lastCall().params).toEqual(['voltix-nova-12']);
+    });
+
+    it('throws NotFoundException when no product matches', async () => {
+      await expect(service.findBySlug('missing')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
+    });
   });
 });

@@ -81,6 +81,33 @@ describe('Products API (e2e)', () => {
     });
   });
 
+  describe('GET /api/products/:slug', () => {
+    it('returns a single product', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/products/voltix-nova-12-pro')
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        slug: 'voltix-nova-12-pro',
+        name: 'Voltix Nova 12 Pro',
+        brand: 'Voltix',
+        price: 399900,
+      });
+    });
+
+    it('returns 404 for an unknown slug', async () => {
+      await request(app.getHttpServer())
+        .get('/api/products/does-not-exist')
+        .expect(404);
+    });
+
+    it('is safe against SQL injection', async () => {
+      await request(app.getHttpServer())
+        .get(`/api/products/${encodeURIComponent("x' OR '1'='1")}`)
+        .expect(404);
+    });
+  });
+
   it('returns 400 for an invalid query', async () => {
     await request(app.getHttpServer()).get('/api/products?q=a&q=b').expect(400);
 
