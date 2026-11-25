@@ -1,12 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service.js';
 import { SearchProductsDto } from './dto/search-products.dto.js';
-import { Product, ProductSort } from './product.interface.js';
+import {
+  FacetValue,
+  Product,
+  ProductFacets,
+  ProductSort,
+} from './product.interface.js';
 
 // Columns returned to the API. Shared by all queries, so every endpoint
 // returns products in the same shape.
 const PRODUCT_COLUMNS =
   'id, slug, name, brand, category, description, price, stock';
+
+// The filtering part of the query string as a plain object type (the DTO is a
+// class used for validation). Plain objects are safe to copy with { ...filters }.
+type ProductFilters = Pick<
+  SearchProductsDto,
+  'q' | 'category' | 'brand' | 'minPrice' | 'maxPrice'
+>;
 
 // ORDER BY can't use $1 parameters (they only work for values, not column
 // names), so each allowed sort maps to a fixed piece of SQL written by us.
@@ -23,8 +35,7 @@ export class ProductsService {
   constructor(private readonly db: DatabaseService) {}
 
   async findAll(filters: SearchProductsDto = {}): Promise<Product[]> {
-    const { conditions, params } = this.buildFilters(filters);
-    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const { where, params } = this.buildWhere(filters);
     const orderBy = ORDER_BY[filters.sort ?? 'default'];
 
     return this.db.query<Product>(
@@ -36,6 +47,64 @@ export class ProductsService {
     );
   }
 
+  // Facets tell the filters panel which options exist and how many products
+  // each one has, e.g. "Voltix (6)".
+  //
+  // Each facet ignores its own filter: brand counts use every filter except
+  // brand. Otherwise, after checking "Voltix", every other brand would show 0
+  // and you couldn't add a second brand. Shops call this "disjunctive facets".
+  async getFacets(filters: ProductFilters = {}): Promise<ProductFacets> {
+    // The three queries don't depend on each other, so they run in parallel
+    const [categories, brands, [price]] = await Promise.all([
+      this.countBy('category', { ...filters, category: undefined }),
+      this.countBy('brand', { ...filters, brand: undefined }),
+      this.priceRange({ ...filters, minPrice: undefined, maxPrice: undefined }),
+    ]);
+
+    return { categories, brands, price };
+  }
+
+  // GROUP BY puts rows with the same value into one group, and count(*)
+  // counts the rows in each group. count(*) is a bigint, which pg returns as
+  // a string, so ::int turns it into a normal number.
+  private countBy(
+    column: 'category' | 'brand',
+    filters: ProductFilters,
+  ): Promise<FacetValue[]> {
+    const { where, params } = this.buildWhere(filters);
+
+    return this.db.query<FacetValue>(
+      `SELECT ${column} AS value, count(*)::int AS count
+       FROM products
+       ${where}
+       GROUP BY ${column}
+       ORDER BY ${column}`,
+      params,
+    );
+  }
+
+  // min() and max() return null when no product matches
+  private priceRange(filters: ProductFilters) {
+    const { where, params } = this.buildWhere(filters);
+
+    return this.db.query<ProductFacets['price']>(
+      `SELECT min(price) AS min, max(price) AS max
+       FROM products
+       ${where}`,
+      params,
+    );
+  }
+
+  private buildWhere(filters: ProductFilters): {
+    where: string;
+    params: unknown[];
+  } {
+    const { conditions, params } = this.buildFilters(filters);
+    const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    return { where, params };
+  }
+
   // Turns the filters into SQL conditions joined with AND. User input never
   // goes into the SQL text: each value is added to `params` and referenced
   // by its number ($1, $2, ...).
@@ -45,7 +114,7 @@ export class ProductsService {
     brand,
     minPrice,
     maxPrice,
-  }: SearchProductsDto): { conditions: string[]; params: unknown[] } {
+  }: ProductFilters): { conditions: string[]; params: unknown[] } {
     const conditions: string[] = [];
     const params: unknown[] = [];
 

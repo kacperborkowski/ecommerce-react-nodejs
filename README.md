@@ -132,6 +132,7 @@ All parameters can be combined, e.g. `?q=watch&brand=Aurel&sort=price_desc`. Inv
 
 | Endpoint | Description |
 |---|---|
+| `GET /api/products/facets` | options for the filters panel: categories and brands with product counts, and the price range. Accepts the same filters as `/api/products`; each facet ignores its own filter, so selecting one brand still shows counts for the others |
 | `GET /api/products/:slug` | a single product, e.g. `/api/products/voltix-nova-12`; `404` if it does not exist |
 
 ## Project structure

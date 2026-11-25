@@ -114,6 +114,49 @@ describe('ProductsService', () => {
     });
   });
 
+  describe('getFacets', () => {
+    // getFacets sends 3 queries; find the one that groups by the given column
+    const callFor = (fragment: string) => {
+      const calls = query.mock.calls as [string, unknown[]][];
+      const call = calls.find(([sql]) => sql.includes(fragment));
+      if (!call) throw new Error(`No query containing "${fragment}"`);
+      return { sql: call[0].replace(/\s+/g, ' '), params: call[1] };
+    };
+
+    beforeEach(() => {
+      query.mockImplementation((sql: string) =>
+        Promise.resolve(sql.includes('min(price)') ? [{ min: 1, max: 2 }] : []),
+      );
+    });
+
+    it('ignores the brand filter when counting brands', async () => {
+      await service.getFacets({ category: 'smartwatches', brand: ['Voltix'] });
+
+      const brands = callFor('GROUP BY brand');
+      expect(brands.sql).toContain('WHERE category = $1 GROUP BY brand');
+      expect(brands.params).toEqual(['smartwatches']);
+    });
+
+    it('ignores the category filter when counting categories', async () => {
+      await service.getFacets({ category: 'smartwatches', brand: ['Voltix'] });
+
+      const categories = callFor('GROUP BY category');
+      expect(categories.sql).toContain(
+        'WHERE brand = ANY($1) GROUP BY category',
+      );
+      expect(categories.params).toEqual([['Voltix']]);
+    });
+
+    it('ignores the price filters when computing the price range', async () => {
+      const facets = await service.getFacets({ q: 'nova', minPrice: 100 });
+
+      const price = callFor('min(price)');
+      expect(price.sql).toContain('WHERE name ILIKE $1');
+      expect(price.params).toEqual(['%nova%']);
+      expect(facets.price).toEqual({ min: 1, max: 2 });
+    });
+  });
+
   describe('findBySlug', () => {
     it('looks the product up by slug passed as a parameter', async () => {
       const product = { id: 1, slug: 'voltix-nova-12' };

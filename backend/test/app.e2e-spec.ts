@@ -201,6 +201,68 @@ describe('Products API (e2e)', () => {
     });
   });
 
+  describe('GET /api/products/facets', () => {
+    const getFacets = async (query = '') => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/products/facets?${query}`)
+        .expect(200);
+
+      return response.body as {
+        categories: { value: string; count: number }[];
+        brands: { value: string; count: number }[];
+        price: { min: number | null; max: number | null };
+      };
+    };
+
+    it('counts all products without filters', async () => {
+      const facets = await getFacets();
+
+      expect(facets.categories).toEqual([
+        { value: 'headphones', count: 5 },
+        { value: 'laptops', count: 5 },
+        { value: 'smartphones', count: 5 },
+        { value: 'smartwatches', count: 5 },
+      ]);
+      expect(facets.brands).toEqual([
+        { value: 'Aurel', count: 5 },
+        { value: 'Nordia', count: 5 },
+        { value: 'Pixon', count: 4 },
+        { value: 'Voltix', count: 6 },
+      ]);
+      expect(facets.price).toEqual({ min: 14900, max: 819900 });
+    });
+
+    it('keeps other brands countable when one brand is selected', async () => {
+      const facets = await getFacets('category=smartwatches&brand=Voltix');
+
+      // Brands ignore the brand filter, but respect the category
+      expect(facets.brands).toEqual([
+        { value: 'Aurel', count: 1 },
+        { value: 'Nordia', count: 1 },
+        { value: 'Pixon', count: 1 },
+        { value: 'Voltix', count: 2 },
+      ]);
+      // Categories ignore the category filter, but respect the brand
+      expect(facets.categories).toContainEqual({
+        value: 'laptops',
+        count: 1,
+      });
+    });
+
+    it('returns empty facets when nothing matches the search', async () => {
+      expect(await getFacets('q=fridge')).toEqual({
+        categories: [],
+        brands: [],
+        price: { min: null, max: null },
+      });
+    });
+
+    it('is not mistaken for a product slug', async () => {
+      const facets = await getFacets();
+      expect(facets).not.toHaveProperty('slug');
+    });
+  });
+
   describe('GET /api/products/:slug', () => {
     it('returns a single product', async () => {
       const response = await request(app.getHttpServer())

@@ -24,3 +24,17 @@ export interface Product {
   price: number;
   stock: number;
 }
+
+// One option in the filters panel, e.g. { value: 'Voltix', count: 6 }
+export interface FacetValue {
+  value: string;
+  count: number;
+}
+
+// Response of GET /api/products/facets
+export interface ProductFacets {
+  categories: FacetValue[];
+  brands: FacetValue[];
+  // Cheapest and most expensive matching product, null when nothing matches
+  price: { min: number | null; max: number | null };
+}
