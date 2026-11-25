@@ -119,6 +119,7 @@ Use the user and database names from your root `.env` if you changed them.
 |---|---|
 | `GET /api/products` | all products |
 | `GET /api/products?q=nova pro` | products whose name contains every word of the query (case-insensitive) |
+| `GET /api/products/:slug` | a single product, e.g. `/api/products/voltix-nova-12`; `404` if it does not exist |
 
 ## Project structure
 
