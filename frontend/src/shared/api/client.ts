@@ -8,14 +8,22 @@ export class ApiError extends Error {
   }
 }
 
-export type QueryParams = Record<string, string | undefined>
+type QueryValue = string | number | undefined
+
+export type QueryParams = Record<string, QueryValue | QueryValue[]>
 
 function buildUrl(path: string, params: QueryParams = {}): string {
   const searchParams = new URLSearchParams()
 
   for (const [key, value] of Object.entries(params)) {
-    if (value) {
-      searchParams.set(key, value)
+    // Arrays become repeated params: { brand: ['A', 'B'] } → brand=A&brand=B
+    const values = Array.isArray(value) ? value : [value]
+
+    for (const item of values) {
+      // Skip empty values, but keep 0 (e.g. maxPrice=0 is a valid filter)
+      if (item !== undefined && item !== '') {
+        searchParams.append(key, String(item))
+      }
     }
   }
 
