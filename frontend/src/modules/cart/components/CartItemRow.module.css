@@ -16,6 +16,7 @@
   background: var(--color-bg-muted);
   color: var(--color-text-muted);
   font-size: 13px;
+  overflow: hidden;
 }
 
 .info {

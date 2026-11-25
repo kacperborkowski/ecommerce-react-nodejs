@@ -11,11 +11,9 @@
   aspect-ratio: 1;
   border-radius: 16px;
   background: var(--color-bg-muted);
+  overflow: hidden;
 }
 
-.imagePlaceholder {
-  color: var(--color-text-muted);
-}
 
 .info {
   display: flex;

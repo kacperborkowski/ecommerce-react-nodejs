@@ -206,6 +206,7 @@ Placing an order runs in one database transaction: it locks the products, checks
 ├── backend/                  # NestJS API
 │   ├── db/migrations/        # SQL migrations (dbmate)
 │   ├── db/seeds/             # demo data
+│   ├── public/images/        # product illustrations (SVG), served at /images
 │   ├── src/database/         # connection pool and transactions
 │   ├── src/products/         # products: list, search, filters, facets
 │   ├── src/cart/             # guest cart
@@ -225,6 +226,7 @@ Each frontend module exposes its public API through `index.ts`. Pages import fro
 ## Design decisions
 
 - **Plain SQL instead of an ORM.** Queries are written by hand with parameters (`$1`), which protects against SQL injection. Migrations are plain SQL files.
+- **Images stored as files, the database keeps only their address** (`image_url`). The backend serves them from `backend/public/images`; in a bigger shop the same column would point to a CDN or object storage. The product illustrations are simple SVGs made for this project (the brands are fictional).
 - **Prices in the smallest currency unit** (grosze, integers), so there are no floating-point rounding errors.
 - **Search state lives in the URL** (`/search?q=...`). Links can be shared, and the back button and page refresh work.
 - **Built-in `fetch` instead of axios**, wrapped in a small typed `apiGet` client. TanStack Query takes care of caching, loading and error states.

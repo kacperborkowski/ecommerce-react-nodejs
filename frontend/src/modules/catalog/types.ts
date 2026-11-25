@@ -17,6 +17,8 @@ export type Product = {
   description: string
   price: number
   stock: number
+  // e.g. /images/products/voltix-nova-12.svg, or null when there's no image
+  imageUrl: string | null
 }
 
 // Query string params accepted by GET /api/products. Prices are in grosze.

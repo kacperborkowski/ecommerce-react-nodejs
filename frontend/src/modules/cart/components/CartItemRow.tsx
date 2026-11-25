@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { formatPrice } from '@/shared/lib/formatPrice'
+import { ProductImage } from '@/shared/ui/ProductImage'
 import { useRemoveCartItem, useUpdateCartItem } from '../hooks/useCart'
 import type { CartItem } from '../types'
 import styles from './CartItemRow.module.css'
@@ -22,8 +23,8 @@ export function CartItemRow({ item }: CartItemRowProps) {
 
   return (
     <li className={styles.row}>
-      <div className={styles.image} aria-hidden="true">
-        Image
+      <div className={styles.image}>
+        <ProductImage src={item.imageUrl} alt="" />
       </div>
 
       <div className={styles.info}>

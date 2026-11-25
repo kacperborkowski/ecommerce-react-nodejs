@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Product } from '@/modules/catalog'
 import { formatPrice } from '@/shared/lib/formatPrice'
+import { ProductImage } from '@/shared/ui/ProductImage'
 import styles from './ProductDetails.module.css'
 
 const LOW_STOCK_THRESHOLD = 5
@@ -15,9 +16,7 @@ export function ProductDetails({ product, actions }: ProductDetailsProps) {
   return (
     <article className={styles.details}>
       <div className={styles.image}>
-        <span className={styles.imagePlaceholder} aria-hidden="true">
-          Image
-        </span>
+        <ProductImage src={product.imageUrl} alt={product.name} priority />
       </div>
 
       <div className={styles.info}>

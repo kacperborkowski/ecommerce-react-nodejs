@@ -4,6 +4,7 @@ export type CartItem = {
   slug: string
   name: string
   brand: string
+  imageUrl: string | null
   price: number
   stock: number
   quantity: number

@@ -14,6 +14,8 @@ export default defineConfig({
     // Forward /api requests to the NestJS backend during development
     proxy: {
       '/api': 'http://localhost:3000',
+      // Product images are files served by the backend
+      '/images': 'http://localhost:3000',
     },
   },
 })
