@@ -30,7 +30,11 @@ export function CartPage() {
               <CartItemRow key={item.productId} item={item} />
             ))}
           </ul>
-          <CartSummary cart={cart} />
+          <CartSummary cart={cart}>
+            <Link to="/checkout" className={styles.checkoutLink}>
+              Proceed to checkout
+            </Link>
+          </CartSummary>
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { formatPrice } from '@/shared/lib/formatPrice'
 import { pluralize } from '@/shared/lib/pluralize'
 import type { Cart } from '../types'
@@ -5,9 +6,11 @@ import styles from './CartSummary.module.css'
 
 type CartSummaryProps = {
   cart: Cart
+  // e.g. the "Proceed to checkout" link, passed in by the page
+  children?: ReactNode
 }
 
-export function CartSummary({ cart }: CartSummaryProps) {
+export function CartSummary({ cart, children }: CartSummaryProps) {
   return (
     <section className={styles.summary} aria-label="Order summary">
       <h2 className={styles.title}>Summary</h2>
@@ -22,6 +25,7 @@ export function CartSummary({ cart }: CartSummaryProps) {
         </div>
       </dl>
       <p className={styles.note}>Delivery and payment are chosen at checkout.</p>
+      {children}
     </section>
   )
 }

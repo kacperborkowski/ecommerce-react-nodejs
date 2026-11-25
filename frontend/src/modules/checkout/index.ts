@@ -1,2 +1,5 @@
+export { CheckoutForm } from './components/CheckoutForm'
+export { OrderTotals } from './components/OrderTotals'
 export { useCheckoutOptions, useOrder, usePlaceOrder } from './hooks/useCheckout'
+export type { CheckoutFormValues } from './schema'
 export type { CheckoutOptions, Order, PlaceOrderRequest } from './types'
