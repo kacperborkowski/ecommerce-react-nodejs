@@ -1,5 +1,7 @@
 # E-commerce shop (React + NestJS + PostgreSQL)
 
+[![CI](https://github.com/kacperborkowski/ecommerce-react-nodejs/actions/workflows/ci.yml/badge.svg)](https://github.com/kacperborkowski/ecommerce-react-nodejs/actions/workflows/ci.yml)
+
 A simple online shop built as a portfolio project. It covers the whole shopping path:
 
 - home page with featured products,
