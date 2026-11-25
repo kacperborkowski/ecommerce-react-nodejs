@@ -18,11 +18,26 @@
   text-decoration: none;
 }
 
+.search {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  margin-left: auto;
+}
+
 @media (max-width: 600px) {
   .inner {
     flex-wrap: wrap;
     gap: 12px;
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  /* Logo and cart in the first row, search below in its own full-width row */
+  .search {
+    order: 1;
+    flex-basis: 100%;
   }
 }

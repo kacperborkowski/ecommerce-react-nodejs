@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router'
+import { AddToCartButton } from '@/modules/cart'
 import { useProduct } from '@/modules/catalog'
 import { ProductDetails } from '@/modules/product'
 import { ApiError } from '@/shared/api/client'
@@ -38,7 +39,10 @@ export function ProductPage() {
     <div className={`container ${styles.page}`}>
       {/* React 19 moves <title> into <head> automatically */}
       <title>{`${product.name} – Shop`}</title>
-      <ProductDetails product={product} />
+      <ProductDetails
+        product={product}
+        actions={<AddToCartButton productId={product.id} stock={product.stock} />}
+      />
     </div>
   )
 }

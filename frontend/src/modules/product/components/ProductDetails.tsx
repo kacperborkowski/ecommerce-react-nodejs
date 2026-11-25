@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { Product } from '@/modules/catalog'
 import { formatPrice } from '@/shared/lib/formatPrice'
 import styles from './ProductDetails.module.css'
@@ -6,9 +7,11 @@ const LOW_STOCK_THRESHOLD = 5
 
 type ProductDetailsProps = {
   product: Product
+  // Buttons under the price, e.g. "Add to cart", passed in by the page
+  actions?: ReactNode
 }
 
-export function ProductDetails({ product }: ProductDetailsProps) {
+export function ProductDetails({ product, actions }: ProductDetailsProps) {
   return (
     <article className={styles.details}>
       <div className={styles.image}>
@@ -23,6 +26,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
         <p className={styles.category}>{product.category}</p>
         <p className={styles.price}>{formatPrice(product.price)}</p>
         <StockStatus stock={product.stock} />
+        {actions}
         <p className={styles.description}>{product.description}</p>
       </div>
     </article>
