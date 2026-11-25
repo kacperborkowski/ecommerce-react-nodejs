@@ -1,5 +1,6 @@
 export { ProductCard } from './components/ProductCard'
 export { ProductCarousel } from './components/ProductCarousel'
 export { ProductGrid } from './components/ProductGrid'
+export { useProduct } from './hooks/useProduct'
 export { useProducts } from './hooks/useProducts'
 export type { Product, ProductCategory, ProductsQuery } from './types'
