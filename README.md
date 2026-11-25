@@ -1,6 +1,12 @@
 # E-commerce shop (React + NestJS + PostgreSQL)
 
-A simple online shop built as a portfolio project: a home page with featured products, product search and a results page. Product page, filters and sorting, cart and checkout are next on the list.
+A simple online shop built as a portfolio project. It covers the whole shopping path:
+
+- home page with featured products,
+- product search with filters (category, brand, price), facet counts and sorting,
+- product page,
+- guest cart kept in a cookie,
+- checkout with delivery and payment methods, and an order confirmation page.
 
 The project runs locally only. Clone it, start the database in Docker and run the frontend and backend with a few commands.
 
@@ -8,7 +14,7 @@ The project runs locally only. Clone it, start the database in Docker and run th
 
 | Part | Technologies |
 |---|---|
-| Frontend | React 19, TypeScript, Vite, React Router, TanStack Query, CSS Modules |
+| Frontend | React 19, TypeScript, Vite, React Router, TanStack Query, React Hook Form, Zod, CSS Modules |
 | Backend | Node.js 22, NestJS, class-validator |
 | Database | PostgreSQL 18 in Docker, plain SQL with [`pg`](https://node-postgres.com), migrations with [dbmate](https://github.com/amacneil/dbmate) |
 | Tests | Vitest, supertest (backend unit and end-to-end tests) |
