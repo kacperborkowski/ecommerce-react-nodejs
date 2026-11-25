@@ -17,7 +17,7 @@ The project runs locally only. Clone it, start the database in Docker and run th
 | Frontend | React 19, TypeScript, Vite, React Router, TanStack Query, React Hook Form, Zod, CSS Modules |
 | Backend | Node.js 22, NestJS, class-validator |
 | Database | PostgreSQL 18 in Docker, plain SQL with [`pg`](https://node-postgres.com), migrations with [dbmate](https://github.com/amacneil/dbmate) |
-| Tests | Vitest, supertest (backend unit and end-to-end tests) |
+| Tests | Vitest, supertest (backend unit and API tests), Playwright (end-to-end tests in a browser) |
 
 ## Requirements
 
@@ -78,6 +78,27 @@ npm run dev
 ```
 
 Open http://localhost:5173. During development Vite forwards `/api` requests to the backend.
+
+## End-to-end tests (Playwright)
+
+The tests in `e2e/` click through the shop in a real browser: search with filters and sorting, and the whole purchase from the search bar to the order confirmation.
+
+The database must be running with migrations and seed applied. Playwright starts the backend and the frontend by itself, or uses them if they're already running. Orders placed by the tests are undone at the end (stock is given back).
+
+First time only, in the `e2e` folder:
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+Run the tests:
+
+```bash
+npm test
+```
+
+`npm run test:ui` opens Playwright's interactive mode, where you can watch each step. After a failure, `npm run report` shows what happened.
 
 ## Data persistence
 
@@ -183,9 +204,12 @@ Placing an order runs in one database transaction: it locks the products, checks
 ├── backend/                  # NestJS API
 │   ├── db/migrations/        # SQL migrations (dbmate)
 │   ├── db/seeds/             # demo data
-│   ├── src/database/         # connection pool shared by all modules
-│   ├── src/products/         # products module: controller, service, DTOs
-│   └── test/                 # end-to-end tests
+│   ├── src/database/         # connection pool and transactions
+│   ├── src/products/         # products: list, search, filters, facets
+│   ├── src/cart/             # guest cart
+│   ├── src/orders/           # checkout options and orders
+│   └── test/                 # API tests against the database
+├── e2e/                      # Playwright tests of the whole shop in a browser
 └── frontend/                 # React app
     └── src/
         ├── app/              # router, providers, root layout
