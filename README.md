@@ -96,7 +96,7 @@ Backend (`backend` folder):
 | `npm run test:e2e` | end-to-end tests of the API (the database must be running) |
 | `npm run lint` | linter |
 | `npm run db:new -- name` | creates a new migration file |
-| `npm run db:migrate` | runs pending migrations |
+| `npm run db:migrate` | runs pending migrations (run it after every `git pull` that adds a migration) |
 | `npm run db:rollback` | rolls back the last migration |
 | `npm run db:status` | shows applied and pending migrations |
 | `npm run db:seed` | loads the demo products (safe to run again) |
@@ -134,6 +134,19 @@ All parameters can be combined, e.g. `?q=watch&brand=Aurel&sort=price_desc`. Inv
 |---|---|
 | `GET /api/products/facets` | options for the filters panel: categories and brands with product counts, and the price range. Accepts the same filters as `/api/products`; each facet ignores its own filter, so selecting one brand still shows counts for the others |
 | `GET /api/products/:slug` | a single product, e.g. `/api/products/voltix-nova-12`; `404` if it does not exist |
+
+### Cart
+
+The guest cart is identified by an `httpOnly` cookie `cartId` (a random UUID), set on the first `POST /api/cart/items`. Every cart endpoint returns the whole cart with totals calculated on the server.
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/cart` | the current cart; an empty cart if there is no cookie yet |
+| `POST /api/cart/items` | add a product: `{ "productId": 3, "quantity": 1 }` (quantity is optional); adding the same product again increases its quantity |
+| `PATCH /api/cart/items/:productId` | set the quantity: `{ "quantity": 2 }` |
+| `DELETE /api/cart/items/:productId` | remove a product from the cart |
+
+Quantities are limited to the product stock (and 99); going over returns `409`. A product that is not in the cart returns `404`.
 
 ## Project structure
 

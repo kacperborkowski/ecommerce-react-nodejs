@@ -85,6 +85,75 @@ export class CartService {
     return { cartId: id, cart: await this.getCart(id) };
   }
 
+  // Sets the quantity of a product that is already in the cart
+  async updateItem(
+    cartId: string | undefined,
+    productId: number,
+    quantity: number,
+  ): Promise<Cart> {
+    const id = this.requireCartId(cartId, productId);
+
+    const [item] = await this.db.query<{ stock: number }>(
+      `SELECT p.stock
+       FROM cart_items ci
+       JOIN products p ON p.id = ci.product_id
+       WHERE ci.cart_id = $1 AND ci.product_id = $2`,
+      [id, productId],
+    );
+    if (!item) {
+      throw this.itemNotFoundError(productId);
+    }
+
+    const limit = Math.min(item.stock, MAX_QUANTITY);
+    if (quantity > limit) {
+      throw this.stockLimitError(limit);
+    }
+
+    await this.db.query(
+      `UPDATE cart_items
+       SET quantity = $3, updated_at = now()
+       WHERE cart_id = $1 AND product_id = $2`,
+      [id, productId, quantity],
+    );
+
+    await this.touchCart(id);
+    return this.getCart(id);
+  }
+
+  async removeItem(
+    cartId: string | undefined,
+    productId: number,
+  ): Promise<Cart> {
+    const id = this.requireCartId(cartId, productId);
+
+    // RETURNING tells us whether a row was actually deleted
+    const deleted = await this.db.query(
+      `DELETE FROM cart_items
+       WHERE cart_id = $1 AND product_id = $2
+       RETURNING product_id`,
+      [id, productId],
+    );
+    if (deleted.length === 0) {
+      throw this.itemNotFoundError(productId);
+    }
+
+    await this.touchCart(id);
+    return this.getCart(id);
+  }
+
+  // Changing an item needs an existing cart: without a valid cookie there is
+  // nothing to change
+  private requireCartId(cartId: string | undefined, productId: number): string {
+    if (!this.isValidId(cartId)) {
+      throw this.itemNotFoundError(productId);
+    }
+    return cartId;
+  }
+
+  private itemNotFoundError(productId: number): NotFoundException {
+    return new NotFoundException(`Product ${productId} is not in the cart`);
+  }
+
   private async findOrCreateCart(cartId: string | undefined): Promise<string> {
     if (this.isValidId(cartId)) {
       const [cart] = await this.db.query<{ id: string }>(

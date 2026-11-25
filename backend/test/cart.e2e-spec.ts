@@ -127,6 +127,79 @@ describe('Cart API (e2e)', () => {
       .expect(404);
   });
 
+  describe('changing items', () => {
+    it('sets the quantity of an item', async () => {
+      const shopper = newShopper();
+      await shopper.post('/api/cart/items').send({ productId: NORDIA_X5 });
+
+      const response = await shopper
+        .patch(`/api/cart/items/${NORDIA_X5}`)
+        .send({ quantity: 5 })
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        totalQuantity: 5,
+        subtotal: 5 * 189900,
+      });
+    });
+
+    it('does not set a quantity above the stock', async () => {
+      const shopper = newShopper();
+      await shopper
+        .post('/api/cart/items')
+        .send({ productId: AUREL_WATCH_ULTRA });
+
+      await shopper
+        .patch(`/api/cart/items/${AUREL_WATCH_ULTRA}`)
+        .send({ quantity: 5 })
+        .expect(409);
+    });
+
+    it('removes an item', async () => {
+      const shopper = newShopper();
+      await shopper.post('/api/cart/items').send({ productId: NORDIA_X5 });
+      await shopper
+        .post('/api/cart/items')
+        .send({ productId: AUREL_WATCH_ULTRA });
+
+      const response = await shopper
+        .delete(`/api/cart/items/${NORDIA_X5}`)
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        items: [{ productId: AUREL_WATCH_ULTRA }],
+        totalQuantity: 1,
+      });
+    });
+
+    it('returns 404 for a product that is not in the cart', async () => {
+      const shopper = newShopper();
+      await shopper.post('/api/cart/items').send({ productId: NORDIA_X5 });
+
+      await shopper
+        .patch(`/api/cart/items/${AUREL_WATCH_ULTRA}`)
+        .send({ quantity: 1 })
+        .expect(404);
+      await shopper.delete(`/api/cart/items/${AUREL_WATCH_ULTRA}`).expect(404);
+    });
+
+    it('returns 404 without a cart cookie', async () => {
+      await request(app.getHttpServer())
+        .delete(`/api/cart/items/${NORDIA_X5}`)
+        .expect(404);
+    });
+
+    it('returns 400 for an invalid product id or quantity', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/cart/items/abc')
+        .expect(400);
+      await request(app.getHttpServer())
+        .patch(`/api/cart/items/${NORDIA_X5}`)
+        .send({ quantity: 0 })
+        .expect(400);
+    });
+  });
+
   it('returns 400 for an invalid body', async () => {
     for (const body of [
       {},

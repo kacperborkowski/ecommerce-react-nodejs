@@ -1,8 +1,20 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import type { CookieOptions, Request, Response } from 'express';
 import { Cart } from './cart.interface.js';
 import { CartService } from './cart.service.js';
 import { AddCartItemDto } from './dto/add-cart-item.dto.js';
+import { UpdateCartItemDto } from './dto/update-cart-item.dto.js';
 
 const CART_COOKIE = 'cartId';
 
@@ -45,6 +57,30 @@ export class CartController {
     // Set (or refresh) the cookie, so the browser remembers this cart
     res.cookie(CART_COOKIE, cartId, CART_COOKIE_OPTIONS);
     return cart;
+  }
+
+  // PATCH /api/cart/items/3  { "quantity": 2 }
+  // ParseIntPipe turns "3" from the URL into a number, or returns 400
+  @Patch('items/:productId')
+  updateItem(
+    @Req() req: Request,
+    @Param('productId', ParseIntPipe) productId: number,
+    @Body() body: UpdateCartItemDto,
+  ): Promise<Cart> {
+    return this.cartService.updateItem(
+      this.readCartId(req),
+      productId,
+      body.quantity,
+    );
+  }
+
+  // DELETE /api/cart/items/3
+  @Delete('items/:productId')
+  removeItem(
+    @Req() req: Request,
+    @Param('productId', ParseIntPipe) productId: number,
+  ): Promise<Cart> {
+    return this.cartService.removeItem(this.readCartId(req), productId);
   }
 
   private readCartId(req: Request): string | undefined {
