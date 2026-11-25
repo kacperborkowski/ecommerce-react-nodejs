@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 import {
   PRODUCT_CATEGORIES,
@@ -56,7 +56,17 @@ function toSearchParams(filters: ProductFilters): URLSearchParams {
   return searchParams
 }
 
-const toGrosze = (pln: number | undefined) =>
+// True when any filter is set (the search phrase and sorting don't count)
+export function hasActiveFilters(filters: ProductFilters): boolean {
+  return Boolean(
+    filters.category ||
+      filters.brand.length ||
+      filters.minPrice !== undefined ||
+      filters.maxPrice !== undefined,
+  )
+}
+
+const toGrosze =(pln: number | undefined) =>
   pln === undefined ? undefined : Math.round(pln * 100)
 
 // Converts URL filters into API params (the API expects prices in grosze)
@@ -75,13 +85,35 @@ export function useProductFilters() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useMemo(() => parseFilters(searchParams), [searchParams])
 
-  const updateFilters = (changes: Partial<ProductFilters>) => {
-    setSearchParams(toSearchParams({ ...filters, ...changes }))
+  // The newest filters, including a change that the router hasn't rendered yet.
+  // Without it, two quick clicks would both start from the same old URL and
+  // the second one would undo the first.
+  const latestFilters = useRef(filters)
+  useEffect(() => {
+    latestFilters.current = filters
+  }, [filters])
+
+  // Changes can be an object, or a function of the current filters
+  const updateFilters = (
+    changes: Partial<ProductFilters> | ((current: ProductFilters) => Partial<ProductFilters>),
+  ) => {
+    const current = latestFilters.current
+    const next = { ...current, ...(typeof changes === 'function' ? changes(current) : changes) }
+
+    latestFilters.current = next
+    setSearchParams(toSearchParams(next))
   }
 
   // Keeps the search phrase and sorting, removes everything else
   const clearFilters = () => {
-    setSearchParams(toSearchParams({ q: filters.q, brand: [], sort: filters.sort }))
+    updateFilters(({ q, sort }) => ({
+      q,
+      sort,
+      category: undefined,
+      brand: [],
+      minPrice: undefined,
+      maxPrice: undefined,
+    }))
   }
 
   return { filters, updateFilters, clearFilters }
