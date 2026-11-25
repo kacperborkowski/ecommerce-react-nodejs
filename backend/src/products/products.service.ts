@@ -12,13 +12,8 @@ const PRODUCT_COLUMNS =
 export class ProductsService {
   constructor(private readonly db: DatabaseService) {}
 
-  async findAll({ q }: SearchProductsDto = {}): Promise<Product[]> {
-    const words = this.toSearchWords(q);
-
-    // One condition per word, so "nova pro" matches "Voltix Nova 12 Pro":
-    // name ILIKE $1 AND name ILIKE $2
-    const conditions = words.map((_, index) => `name ILIKE $${index + 1}`);
-    const params = words.map((word) => `%${this.escapeLikePattern(word)}%`);
+  async findAll(filters: SearchProductsDto = {}): Promise<Product[]> {
+    const { conditions, params } = this.buildFilters(filters);
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
 
     return this.db.query<Product>(
@@ -28,6 +23,52 @@ export class ProductsService {
        ORDER BY id`,
       params,
     );
+  }
+
+  // Turns the filters into SQL conditions joined with AND. User input never
+  // goes into the SQL text: each value is added to `params` and referenced
+  // by its number ($1, $2, ...).
+  private buildFilters({
+    q,
+    category,
+    brand,
+    minPrice,
+    maxPrice,
+  }: SearchProductsDto): { conditions: string[]; params: unknown[] } {
+    const conditions: string[] = [];
+    const params: unknown[] = [];
+
+    // Adds the value to params and returns its placeholder, e.g. "$3"
+    const param = (value: unknown): string => {
+      params.push(value);
+      return `$${params.length}`;
+    };
+
+    // One condition per word, so "nova pro" matches "Voltix Nova 12 Pro"
+    for (const word of this.toSearchWords(q)) {
+      const pattern = `%${this.escapeLikePattern(word)}%`;
+      conditions.push(`name ILIKE ${param(pattern)}`);
+    }
+
+    if (category) {
+      conditions.push(`category = ${param(category)}`);
+    }
+
+    // brand = ANY($1) checks if the brand is one of the values in the array,
+    // like brand IN ('Voltix', 'Aurel')
+    if (brand?.length) {
+      conditions.push(`brand = ANY(${param(brand)})`);
+    }
+
+    if (minPrice !== undefined) {
+      conditions.push(`price >= ${param(minPrice)}`);
+    }
+
+    if (maxPrice !== undefined) {
+      conditions.push(`price <= ${param(maxPrice)}`);
+    }
+
+    return { conditions, params };
   }
 
   async findBySlug(slug: string): Promise<Product> {

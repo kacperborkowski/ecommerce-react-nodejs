@@ -81,6 +81,72 @@ describe('Products API (e2e)', () => {
     });
   });
 
+  describe('filters', () => {
+    const filterNames = async (query: string) => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/products?${query}`)
+        .expect(200);
+
+      return (response.body as { name: string }[]).map(
+        (product) => product.name,
+      );
+    };
+
+    it('filters by category', async () => {
+      expect(await filterNames('category=laptops')).toEqual([
+        'Nordia Book 14',
+        'Nordia Book 16 Pro',
+        'Voltix GameBook 15',
+        'Pixon Study 13',
+        'Aurel Air 13',
+      ]);
+    });
+
+    it('filters by one or more brands', async () => {
+      expect(await filterNames('brand=Pixon')).toEqual([
+        'Pixon Lite 4',
+        'Pixon Study 13',
+        'Pixon Pods Mini',
+        'Pixon Fit 2',
+      ]);
+      expect(
+        await filterNames('category=smartwatches&brand=Voltix&brand=Aurel'),
+      ).toEqual([
+        'Voltix Watch 5',
+        'Voltix Watch 5 Classic',
+        'Aurel Watch Ultra',
+      ]);
+    });
+
+    it('filters by price range in grosze, including the limits', async () => {
+      expect(await filterNames('minPrice=119900&maxPrice=189900')).toEqual([
+        'Nordia X5',
+        'Pixon Study 13',
+        'Voltix Watch 5',
+        'Voltix Watch 5 Classic',
+      ]);
+    });
+
+    it('combines filters with the search phrase', async () => {
+      expect(await filterNames('q=watch&brand=Aurel')).toEqual([
+        'Aurel Watch Ultra',
+      ]);
+    });
+
+    it('returns 400 for invalid filter values', async () => {
+      for (const query of [
+        'category=fridges',
+        'minPrice=abc',
+        'minPrice=-1',
+        'maxPrice=10.5',
+      ]) {
+        await request(app.getHttpServer())
+          .get(`/api/products?${query}`)
+          .expect(400);
+      }
+    });
+  });
+
   describe('GET /api/products/:slug', () => {
     it('returns a single product', async () => {
       const response = await request(app.getHttpServer())

@@ -1,5 +1,12 @@
-export type ProductCategory =
-  'smartphones' | 'laptops' | 'headphones' | 'smartwatches';
+// Single source of truth: used for the type and for validating ?category=
+export const PRODUCT_CATEGORIES = [
+  'smartphones',
+  'laptops',
+  'headphones',
+  'smartwatches',
+] as const;
+
+export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
 export interface Product {
   id: number;

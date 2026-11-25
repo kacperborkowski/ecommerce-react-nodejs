@@ -67,6 +67,35 @@ describe('ProductsService', () => {
     expect(lastCall().params).toEqual(['%100\\%\\_off%']);
   });
 
+  it('combines all filters with AND, numbering parameters in order', async () => {
+    await service.findAll({
+      q: 'watch',
+      category: 'smartwatches',
+      brand: ['Voltix', 'Aurel'],
+      minPrice: 100000,
+      maxPrice: 200000,
+    });
+
+    expect(lastCall().sql).toContain(
+      'WHERE name ILIKE $1 AND category = $2 AND brand = ANY($3)' +
+        ' AND price >= $4 AND price <= $5',
+    );
+    expect(lastCall().params).toEqual([
+      '%watch%',
+      'smartwatches',
+      ['Voltix', 'Aurel'],
+      100000,
+      200000,
+    ]);
+  });
+
+  it('accepts a price limit of 0', async () => {
+    await service.findAll({ maxPrice: 0 });
+
+    expect(lastCall().sql).toContain('WHERE price <= $1');
+    expect(lastCall().params).toEqual([0]);
+  });
+
   describe('findBySlug', () => {
     it('looks the product up by slug passed as a parameter', async () => {
       const product = { id: 1, slug: 'voltix-nova-12' };
