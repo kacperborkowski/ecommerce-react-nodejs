@@ -147,6 +147,60 @@ describe('Products API (e2e)', () => {
     });
   });
 
+  describe('sorting', () => {
+    const sortedNames = async (query: string) => {
+      const response = await request(app.getHttpServer())
+        .get(`/api/products?${query}`)
+        .expect(200);
+
+      return (response.body as { name: string }[]).map(
+        (product) => product.name,
+      );
+    };
+
+    it('sorts by price ascending and descending', async () => {
+      const cheapestFirst = [
+        'Pixon Lite 4',
+        'Nordia X5',
+        'Voltix Nova 12',
+        'Voltix Nova 12 Pro',
+        'Aurel Fold 2',
+      ];
+
+      expect(await sortedNames('category=smartphones&sort=price_asc')).toEqual(
+        cheapestFirst,
+      );
+      expect(await sortedNames('category=smartphones&sort=price_desc')).toEqual(
+        [...cheapestFirst].reverse(),
+      );
+    });
+
+    it('sorts by name', async () => {
+      expect(await sortedNames('category=smartphones&sort=name_asc')).toEqual([
+        'Aurel Fold 2',
+        'Nordia X5',
+        'Pixon Lite 4',
+        'Voltix Nova 12',
+        'Voltix Nova 12 Pro',
+      ]);
+    });
+
+    it('keeps a stable order for equal prices', async () => {
+      expect(
+        await sortedNames('minPrice=189900&maxPrice=189900&sort=price_desc'),
+      ).toEqual(['Nordia X5', 'Pixon Study 13']);
+    });
+
+    it('returns 400 for an unknown sort, including SQL injection attempts', async () => {
+      for (const sort of ['price', 'id; DROP TABLE products']) {
+        await request(app.getHttpServer())
+          .get('/api/products')
+          .query({ sort })
+          .expect(400);
+      }
+    });
+  });
+
   describe('GET /api/products/:slug', () => {
     it('returns a single product', async () => {
       const response = await request(app.getHttpServer())

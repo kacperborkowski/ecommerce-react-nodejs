@@ -96,6 +96,24 @@ describe('ProductsService', () => {
     expect(lastCall().params).toEqual([0]);
   });
 
+  describe('sorting', () => {
+    it('uses the default catalog order without sort', async () => {
+      await service.findAll();
+
+      expect(lastCall().sql).toMatch(/ORDER BY id$/);
+    });
+
+    it.each([
+      ['price_asc', 'ORDER BY price ASC, id'],
+      ['price_desc', 'ORDER BY price DESC, id'],
+      ['name_asc', 'ORDER BY name ASC, id'],
+    ] as const)('maps sort=%s to %s', async (sort, orderBy) => {
+      await service.findAll({ sort });
+
+      expect(lastCall().sql).toMatch(new RegExp(`${orderBy}$`));
+    });
+  });
+
   describe('findBySlug', () => {
     it('looks the product up by slug passed as a parameter', async () => {
       const product = { id: 1, slug: 'voltix-nova-12' };

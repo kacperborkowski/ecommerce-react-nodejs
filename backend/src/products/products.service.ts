@@ -1,12 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service.js';
 import { SearchProductsDto } from './dto/search-products.dto.js';
-import { Product } from './product.interface.js';
+import { Product, ProductSort } from './product.interface.js';
 
 // Columns returned to the API. Shared by all queries, so every endpoint
 // returns products in the same shape.
 const PRODUCT_COLUMNS =
   'id, slug, name, brand, category, description, price, stock';
+
+// ORDER BY can't use $1 parameters (they only work for values, not column
+// names), so each allowed sort maps to a fixed piece of SQL written by us.
+// `id` at the end keeps the order stable when two products have equal prices.
+const ORDER_BY: Record<ProductSort | 'default', string> = {
+  default: 'id',
+  price_asc: 'price ASC, id',
+  price_desc: 'price DESC, id',
+  name_asc: 'name ASC, id',
+};
 
 @Injectable()
 export class ProductsService {
@@ -15,12 +25,13 @@ export class ProductsService {
   async findAll(filters: SearchProductsDto = {}): Promise<Product[]> {
     const { conditions, params } = this.buildFilters(filters);
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+    const orderBy = ORDER_BY[filters.sort ?? 'default'];
 
     return this.db.query<Product>(
       `SELECT ${PRODUCT_COLUMNS}
        FROM products
        ${where}
-       ORDER BY id`,
+       ORDER BY ${orderBy}`,
       params,
     );
   }

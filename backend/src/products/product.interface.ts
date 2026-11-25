@@ -8,6 +8,11 @@ export const PRODUCT_CATEGORIES = [
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
+// Allowed values of ?sort=
+export const PRODUCT_SORTS = ['price_asc', 'price_desc', 'name_asc'] as const;
+
+export type ProductSort = (typeof PRODUCT_SORTS)[number];
+
 export interface Product {
   id: number;
   slug: string;

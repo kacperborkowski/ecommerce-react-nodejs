@@ -8,8 +8,8 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
-import { PRODUCT_CATEGORIES } from '../product.interface.js';
-import type { ProductCategory } from '../product.interface.js';
+import { PRODUCT_CATEGORIES, PRODUCT_SORTS } from '../product.interface.js';
+import type { ProductCategory, ProductSort } from '../product.interface.js';
 
 // Describes and validates the query string of GET /api/products, e.g.
 // ?q=nova&category=smartphones&brand=Voltix&brand=Aurel&minPrice=100000
@@ -47,4 +47,9 @@ export class SearchProductsDto {
   @IsInt()
   @Min(0)
   maxPrice?: number;
+
+  // Without sort, products keep the default catalog order
+  @IsOptional()
+  @IsIn(PRODUCT_SORTS)
+  sort?: ProductSort;
 }
