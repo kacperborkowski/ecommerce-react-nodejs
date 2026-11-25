@@ -28,3 +28,16 @@ export type ProductsQuery = {
   maxPrice?: number
   sort?: ProductSort
 }
+
+// One option in the filters panel, e.g. { value: 'Voltix', count: 6 }
+export type FacetValue = {
+  value: string
+  count: number
+}
+
+// Mirrors GET /api/products/facets. Prices are in grosze.
+export type ProductFacets = {
+  categories: FacetValue[]
+  brands: FacetValue[]
+  price: { min: number | null; max: number | null }
+}

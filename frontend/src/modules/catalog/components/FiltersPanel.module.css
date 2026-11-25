@@ -90,3 +90,14 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
 }
+
+.count {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.option:has(input:disabled) {
+  color: var(--color-text-muted);
+  cursor: default;
+}

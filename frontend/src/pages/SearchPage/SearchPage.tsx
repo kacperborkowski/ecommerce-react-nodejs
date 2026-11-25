@@ -5,6 +5,7 @@ import {
   ProductGrid,
   SortSelect,
   toProductsQuery,
+  useProductFacets,
   useProductFilters,
   useProducts,
 } from '@/modules/catalog'
@@ -14,7 +15,10 @@ import styles from './SearchPage.module.css'
 export function SearchPage() {
   const { filters, updateFilters, clearFilters } = useProductFilters()
   const { q: query } = filters
-  const { data: products, isPending, isError } = useProducts(toProductsQuery(filters))
+  const productsQuery = toProductsQuery(filters)
+  const { data: products, isPending, isError } = useProducts(productsQuery)
+  // Counts for the filters panel. If they fail to load, the panel still works without them.
+  const { data: facets } = useProductFacets(productsQuery)
   // On small screens the filters are hidden behind a button
   const [filtersOpen, setFiltersOpen] = useState(false)
   const filtersActive = hasActiveFilters(filters)
@@ -49,7 +53,12 @@ export function SearchPage() {
             id="filters-panel"
             className={`${styles.filters} ${filtersOpen ? styles.filtersOpen : ''}`}
           >
-            <FiltersPanel filters={filters} onChange={updateFilters} onClear={clearFilters} />
+            <FiltersPanel
+              filters={filters}
+              facets={facets}
+              onChange={updateFilters}
+              onClear={clearFilters}
+            />
           </div>
         </aside>
 

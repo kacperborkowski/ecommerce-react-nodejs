@@ -4,7 +4,15 @@ export { ProductCarousel } from './components/ProductCarousel'
 export { ProductGrid } from './components/ProductGrid'
 export { SortSelect } from './components/SortSelect'
 export { useProduct } from './hooks/useProduct'
+export { useProductFacets } from './hooks/useProductFacets'
 export { hasActiveFilters, toProductsQuery, useProductFilters } from './hooks/useProductFilters'
 export type { ProductFilters } from './hooks/useProductFilters'
 export { useProducts } from './hooks/useProducts'
-export type { Product, ProductCategory, ProductSort, ProductsQuery } from './types'
+export type {
+  FacetValue,
+  Product,
+  ProductCategory,
+  ProductFacets,
+  ProductSort,
+  ProductsQuery,
+} from './types'
