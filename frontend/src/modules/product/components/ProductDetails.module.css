@@ -1,0 +1,68 @@
+.details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px 48px;
+  align-items: start;
+}
+
+.image {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: var(--color-bg-muted);
+}
+
+.imagePlaceholder {
+  color: var(--color-text-muted);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.brand,
+.category {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.category {
+  text-transform: capitalize;
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 36px);
+  line-height: 1.2;
+}
+
+.price {
+  margin: 8px 0 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.stock {
+  margin: 0;
+  font-weight: 500;
+}
+
+.inStock {
+  color: #15803d;
+}
+
+.lowStock {
+  color: #b45309;
+}
+
+.outOfStock {
+  color: #b91c1c;
+}
+
+.description {
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
