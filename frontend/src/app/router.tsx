@@ -3,6 +3,7 @@ import { CartPage } from '@/pages/CartPage'
 import { CheckoutPage } from '@/pages/CheckoutPage'
 import { HomePage } from '@/pages/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { OrderConfirmationPage } from '@/pages/OrderConfirmationPage'
 import { ProductPage } from '@/pages/ProductPage'
 import { SearchPage } from '@/pages/SearchPage'
 import { RootLayout } from './RootLayout'
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: '/product/:slug', element: <ProductPage /> },
       { path: '/cart', element: <CartPage /> },
       { path: '/checkout', element: <CheckoutPage /> },
+      { path: '/order/:id', element: <OrderConfirmationPage /> },
       // Any other address
       { path: '*', element: <NotFoundPage /> },
     ],
