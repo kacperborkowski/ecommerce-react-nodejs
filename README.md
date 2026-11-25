@@ -25,8 +25,10 @@ The project runs locally only. Clone it, start the database in Docker and run th
 In the project root, create the `.env` file and set your own password in `POSTGRES_PASSWORD`:
 
 ```bash
-cp .env.example .env
+cp -n .env.example .env
 ```
+
+`-n` never overwrites an existing `.env`. This matters: PostgreSQL reads the password only when the database is created for the first time, so changing it later breaks the connection.
 
 Start PostgreSQL in the background:
 
@@ -40,8 +42,10 @@ In the `backend` folder, create the `.env` file. In `DATABASE_URL`, use the same
 
 ```bash
 cd backend
-cp .env.example .env
+cp -n .env.example .env
 ```
+
+If the backend fails with `password authentication failed for user "shop"`, the passwords in the two `.env` files do not match.
 
 Install dependencies, create the tables and load the demo products:
 
