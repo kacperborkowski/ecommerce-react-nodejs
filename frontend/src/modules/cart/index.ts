@@ -1,4 +1,6 @@
 export { AddToCartButton } from './components/AddToCartButton'
+export { CartItemRow } from './components/CartItemRow'
 export { CartLink } from './components/CartLink'
+export { CartSummary } from './components/CartSummary'
 export { useAddToCart, useCart, useRemoveCartItem, useUpdateCartItem } from './hooks/useCart'
 export type { Cart, CartItem } from './types'
