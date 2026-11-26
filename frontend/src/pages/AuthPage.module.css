@@ -1,0 +1,38 @@
+/* Shared by LoginPage and RegisterPage */
+
+.page {
+  display: flex;
+  justify-content: center;
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 440px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+}
+
+.switch {
+  margin: 0;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.switch a {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-top: 24px;
+  }
+}
