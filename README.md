@@ -8,6 +8,7 @@ A simple online shop built as a portfolio project. It covers the whole shopping 
 - product search with filters (category, brand, price), facet counts and sorting,
 - product page,
 - guest cart kept in a cookie,
+- user accounts: registration, login and logout (API),
 - checkout with delivery and payment methods, and an order confirmation page.
 
 The project runs locally only. Clone it, start the database in Docker and run the frontend and backend with a few commands.
@@ -199,6 +200,19 @@ Quantities are limited to the product stock (and 99); going over returns `409`. 
 
 Placing an order runs in one database transaction: it locks the products, checks the stock, saves the order with the current prices, takes the pieces out of stock and deletes the cart. If anything fails, nothing is saved. Sending the same `idempotencyKey` again returns the existing order (`200`) instead of creating a second one. Payment is not processed: the order is saved with the chosen method and status `placed`.
 
+### Accounts
+
+A logged-in browser is identified by an `httpOnly` cookie `sessionId` (a random token, valid for 30 days).
+
+| Endpoint | Description |
+|---|---|
+| `POST /api/auth/register` | create an account and log in: `{ "email": "jan@example.com", "password": "at least 8 characters", "firstName": "Jan", "lastName": "Kowalski" }`; `409` if the email is taken |
+| `POST /api/auth/login` | log in: `{ "email": "...", "password": "..." }`; `401` with the same message for an unknown email and a wrong password |
+| `POST /api/auth/logout` | log out (`204`); the session is deleted on the server, so the old cookie stops working |
+| `GET /api/auth/me` | the logged-in user, or `{ "user": null }` for a guest |
+
+Emails are saved in lower case, so `Jan@Example.com` and `jan@example.com` are one account.
+
 ## Project structure
 
 ```
@@ -211,6 +225,7 @@ Placing an order runs in one database transaction: it locks the products, checks
 │   ├── src/products/         # products: list, search, filters, facets
 │   ├── src/cart/             # guest cart
 │   ├── src/orders/           # checkout options and orders
+│   ├── src/auth/             # registration, login, sessions
 │   └── test/                 # API tests against the database
 ├── e2e/                      # Playwright tests of the whole shop in a browser
 └── frontend/                 # React app
@@ -227,6 +242,7 @@ Each frontend module exposes its public API through `index.ts`. Pages import fro
 
 - **Plain SQL instead of an ORM.** Queries are written by hand with parameters (`$1`), which protects against SQL injection. Migrations are plain SQL files.
 - **Images stored as files, the database keeps only their address** (`image_url`). The backend serves them from `backend/public/images`; in a bigger shop the same column would point to a CDN or object storage. The product illustrations are simple SVGs made for this project (the brands are fictional).
+- **Sessions in the database instead of JWT.** The cookie holds a random token and the database keeps its SHA-256 hash, so logging out really ends the session on the server. Passwords are hashed with scrypt (built into Node.js) with a random salt per password.
 - **Prices in the smallest currency unit** (grosze, integers), so there are no floating-point rounding errors.
 - **Search state lives in the URL** (`/search?q=...`). Links can be shared, and the back button and page refresh work.
 - **Built-in `fetch` instead of axios**, wrapped in a small typed `apiGet` client. TanStack Query takes care of caching, loading and error states.
