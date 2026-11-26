@@ -1,0 +1,69 @@
+.link,
+.user {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--color-bg-muted);
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+}
+
+.logout {
+  height: 44px;
+  padding: 0 8px;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.logout:hover {
+  color: var(--color-text);
+}
+
+.link:focus-visible,
+.logout:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 600px) {
+  /* Hidden on screen, but still read by screen readers, so the icon-only
+     link keeps its name ("Sign in"). display: none would hide it from them too. */
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .user {
+    padding-right: 0;
+  }
+}
