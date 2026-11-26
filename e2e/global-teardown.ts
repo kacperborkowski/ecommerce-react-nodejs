@@ -1,10 +1,11 @@
 import { fileURLToPath } from 'node:url'
 import pg from 'pg'
-import { TEST_EMAIL } from './tests/test-data'
+import { TEST_ACCOUNT_DOMAIN, TEST_EMAIL } from './tests/test-data'
 
 // Runs once after all tests, also when some of them failed.
 // Placing an order takes products out of stock, so here we put the ordered
-// pieces back and delete the test orders. The database stays as it was.
+// pieces back and delete the test orders and accounts. The database stays as
+// it was.
 export default async function globalTeardown() {
   // Same database as the backend uses (path relative to this file, so it
   // works no matter which folder the tests are started from)
@@ -31,6 +32,8 @@ export default async function globalTeardown() {
       [TEST_EMAIL],
     )
     await client.query('DELETE FROM orders WHERE email = $1', [TEST_EMAIL])
+    // Their sessions go with them (ON DELETE CASCADE)
+    await client.query('DELETE FROM users WHERE email LIKE $1', [`%${TEST_ACCOUNT_DOMAIN}`])
     await client.query('COMMIT')
   } catch (error) {
     await client.query('ROLLBACK')

@@ -8,7 +8,7 @@ A simple online shop built as a portfolio project. It covers the whole shopping 
 - product search with filters (category, brand, price), facet counts and sorting,
 - product page,
 - guest cart kept in a cookie,
-- user accounts: registration, login and logout (API),
+- user accounts: registration, sign-in and logout,
 - checkout with delivery and payment methods, and an order confirmation page.
 
 The project runs locally only. Clone it, start the database in Docker and run the frontend and backend with a few commands.
@@ -84,9 +84,9 @@ Open http://localhost:5173. During development Vite forwards `/api` requests to 
 
 ## End-to-end tests (Playwright)
 
-The tests in `e2e/` click through the shop in a real browser: search with filters and sorting, and the whole purchase from the search bar to the order confirmation.
+The tests in `e2e/` click through the shop in a real browser: search with filters and sorting, the whole purchase from the search bar to the order confirmation, and registration with signing in and out.
 
-The database must be running with migrations and seed applied. Playwright starts the backend and the frontend by itself, or uses them if they're already running. Orders placed by the tests are undone at the end (stock is given back).
+The database must be running with migrations and seed applied. Playwright starts the backend and the frontend by itself, or uses them if they're already running. Orders and accounts created by the tests are removed at the end (stock is given back).
 
 First time only, in the `e2e` folder:
 
