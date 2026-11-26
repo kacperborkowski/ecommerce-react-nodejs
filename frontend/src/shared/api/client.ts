@@ -69,6 +69,11 @@ async function request<T>(path: string, { method = 'GET', params, body }: Reques
     )
   }
 
+  // 204 No Content (e.g. logout) has no body to parse
+  if (response.status === 204) {
+    return undefined as T
+  }
+
   return response.json() as Promise<T>
 }
 
