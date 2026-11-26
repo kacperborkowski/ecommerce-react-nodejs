@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
   IsDefined,
   IsEmail,
@@ -15,13 +15,7 @@ import {
   PAYMENT_METHOD_IDS,
 } from '../checkout-options.js';
 import type { DeliveryMethod, PaymentMethod } from '../checkout-options.js';
-
-// Removes spaces around text, so "  Jan " is saved as "Jan" and "   " fails
-// @IsNotEmpty
-const Trim = () =>
-  Transform(({ value }: { value: unknown }) =>
-    typeof value === 'string' ? value.trim() : value,
-  );
+import { Trim } from '../../common/transforms.js';
 
 export class CustomerDto {
   @Trim()
