@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import type { SubmitEvent } from 'react'
 import {
   hasActiveFilters,
   type ProductFilters,
@@ -51,7 +51,7 @@ export function FiltersPanel({ filters, facets, onChange, onClear }: FiltersPane
 
   // Prices are applied on submit (button or Enter), not on every keystroke,
   // so typing "1500" doesn't send requests for 1, 15 and 150
-  const handlePriceSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handlePriceSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const toPrice = (name: string) => {

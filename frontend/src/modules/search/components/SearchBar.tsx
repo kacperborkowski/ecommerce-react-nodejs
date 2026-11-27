@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import type { SubmitEvent } from 'react'
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router'
 import styles from './SearchBar.module.css'
 
@@ -7,7 +7,7 @@ export function SearchBar() {
   const [searchParams] = useSearchParams()
   const currentQuery = searchParams.get('q') ?? ''
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     const query = String(formData.get('q') ?? '').trim()
